@@ -1,6 +1,6 @@
 import "./app.css"
 import { useEffect, useState } from "react"
-import { ClockIcon, HumidityIcon, MenuIcon, MoonIcon, SearchIcon, SpeedIcon, SunIcon, TempIcon, WindChillIcon, WindIcon } from "./assets/icons";
+import { ClockIcon, HumidityIcon, MenuIcon, MoonIcon, SpeedIcon, SunIcon, TempIcon, WindChillIcon, WindIcon } from "./assets/icons";
 import Weather from "./models/weather";
 import Forecast from "./models/forecast";
 import useBoolean from "./hooks/useBoolean";
@@ -9,24 +9,25 @@ function App() {
   const [location, setLocation] = useState(null);
 
   function getCurrentLocation() {
-    if ('geolocation' in navigator) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        setLocation(bonaoTest)
-        // setLocation({ lat: latitude, lon: longitude });
-      }, (err) => {
-        console.error('Geolocalization failed', err);
-      });
+    if (!'geolocation' in navigator) {
+      alert('Geolocalization can not be used in this navigator')
     } else {
-      console.error('Geolocalization can not be used in this navigator');
+      const result = navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        setLocation(locationTest)
+      }, (err) => {
+        if (err.message.includes("Only secure origins are allowed")) {
+          setLocation(locationTest)
+        } else {
+          alert('Geolocalization failed, ' + err.message);
+        }
+      });
     }
   }
 
   useEffect(getCurrentLocation, []);
 
-  const [forecasts, setForecasts] = useState(null);
   const [currentWeather, setCurrentWeather] = useState(null);
-
   function getWeatherInfo() {
     if (location) {
       const { lat, lon } = location;
@@ -34,29 +35,13 @@ function App() {
         .then(res => res.json())
         .then(res => {
           const weatherInfo = new Weather(res);
-          setCurrentWeather(weatherInfo);
-        });
-
-      fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key1}`)
-        .then(res => res.json())
-        .then(res => {
-          const forecastsInfo = res.list.slice(0, 10).map((data) => new Forecast(data));
-          setForecasts(forecastsInfo);
-        });
-    } else { //DELETE ElSE
-      const { lat, lon } = bonaoTest;
-      fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${key1}`)
-        .then(res => res.json())
-        .then(res => {
-          const weatherInfo = new Weather(res);
-          setCurrentWeather(weatherInfo);
-        });
-
-      fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key1}`)
-        .then(res => res.json())
-        .then(res => {
-          const forecastsInfo = res.list.slice(0, 10).map((data) => new Forecast(data));
-          setForecasts(forecastsInfo);
+          fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${key1}`)
+            .then(res => res.json())
+            .then(res => {
+              const forecastsInfo = res.list.slice(0, 10).map((data) => new Forecast(data));
+              weatherInfo.forecasts = forecastsInfo
+              setCurrentWeather(weatherInfo);
+            });
         });
     }
   }
@@ -67,7 +52,7 @@ function App() {
   const speedSwitch = useBoolean();
   const tempSwitch = useBoolean();
   const menuSwitch = useBoolean();
-  
+
   return <>
     <main className={`appearDownAnimation ${menuSwitch.state ? "hidden" : "shown"}`}>
       <header>
@@ -102,7 +87,7 @@ function App() {
 
         <article className="secondaryCard">
           <div className="cardTitle">
-            <div className="iconContainer" style={{padding:"10px"}}>
+            <div className="iconContainer" style={{ padding: "10px" }}>
               <HumidityIcon />
             </div>
             <h1 className="secondaryTextTitle">Humidity</h1>
@@ -150,7 +135,7 @@ function App() {
           <p className="forecastTemp">{tempSwitch.state ? currentWeather?.main.tempC : currentWeather?.main.tempF}<span>{tempSwitch.state ? "°C" : "°F"}</span></p>
         </article>
 
-        {forecasts && forecasts.map((forecast) => <article key={forecast.id} className="forecastCard">
+        {currentWeather?.forecasts.map((forecast) => <article key={forecast.id} className="forecastCard">
           <p className="forecastHour" style={{ height: hourSwitch.state ? "24px" : "12px" }}>
             {hourSwitch.state ? forecast.hour12 : forecast.hour24}
           </p>
@@ -213,7 +198,7 @@ function ToggleButton({ setting, opts, boolean }) {
   </>
 }
 
-const bonaoTest = { lat: 18.9366272, lon: -70.402048 }
+const locationTest = { lat: 18.9366272, lon: -70.402048 }
 const key1 = "386abf5fd398221d0ba6c40ea78d098a"
 
 export default App
