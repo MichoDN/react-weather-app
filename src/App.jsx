@@ -1,5 +1,5 @@
 import "./app.css"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { ClockIcon, HumidityIcon, MenuIcon, MoonIcon, SpeedIcon, SunIcon, TempIcon, WindChillIcon, WindIcon } from "./assets/icons";
 import Weather from "./models/weather";
 import Forecast from "./models/forecast";
@@ -39,7 +39,7 @@ function App() {
             .then(res => res.json())
             .then(res => {
               const forecastsInfo = res.list.slice(0, 10).map((data) => new Forecast(data));
-              weatherInfo.forecasts = forecastsInfo
+              weatherInfo.forecasts = forecastsInfo;
               setCurrentWeather(weatherInfo);
             });
         });
