@@ -1,6 +1,6 @@
 import "./app.css"
 import { useEffect, useRef, useState } from "react"
-import { ClockIcon, HumidityIcon, MoonIcon, SettingsIcon, SpeedIcon, SunIcon, TempIcon, WindChillIcon, WindIcon } from "./assets/icons";
+import { ClockIcon, HumidityIcon, MoonIcon, SettingsIcon, SpeedIcon, SunIcon, TempIcon, WindChillIcon, WindIcon } from "./assets/Icons";
 import Weather from "./models/weather";
 import Forecast from "./models/forecast";
 import useBoolean from "./hooks/useBoolean";
