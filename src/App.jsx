@@ -14,13 +14,9 @@ function App() {
     } else {
       const result = navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
-        setLocation(locationTest)
+        setLocation({ lat: latitude, lon: longitude })
       }, (err) => {
-        if (err.message.includes("Only secure origins are allowed")) {
-          setLocation(locationTest)
-        } else {
-          alert('Geolocalization failed, ' + err.message);
-        }
+        alert('Geolocalization failed, ' + err.message);
       });
     }
   }
@@ -199,7 +195,6 @@ function ToggleButton({ setting, opts, boolean }) {
   </>
 }
 
-const locationTest = { lat: 18.9366272, lon: -70.402048 }
 const key1 = "386abf5fd398221d0ba6c40ea78d098a"
 
 export default App
