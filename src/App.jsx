@@ -1,6 +1,6 @@
 import "./app.css"
 import { useEffect, useRef, useState } from "react"
-import { ClockIcon, HumidityIcon, MenuIcon, MoonIcon, SpeedIcon, SunIcon, TempIcon, WindChillIcon, WindIcon } from "./assets/icons";
+import { ClockIcon, HumidityIcon, MoonIcon, SettingsIcon, SpeedIcon, SunIcon, TempIcon, WindChillIcon, WindIcon } from "./assets/icons";
 import Weather from "./models/weather";
 import Forecast from "./models/forecast";
 import useBoolean from "./hooks/useBoolean";
@@ -54,6 +54,12 @@ function App() {
   const menuSwitch = useBoolean();
 
   return <>
+    <nav>
+      <div className="toolBar">
+        <button onClick={menuSwitch.toggleState}><SettingsIcon /></button>
+      </div>
+    </nav>
+
     <main className={`appearDownAnimation ${menuSwitch.state ? "hidden" : "shown"}`}>
       <header>
         <h1 className="sectionTitle">{currentWeather?.city} - {currentWeather?.country}</h1>
@@ -87,7 +93,7 @@ function App() {
 
         <article className="secondaryCard">
           <div className="cardTitle">
-            <div className="iconContainer" style={{ padding: "10px" }}>
+            <div className="iconContainer" id="humidityIcon">
               <HumidityIcon />
             </div>
             <h1 className="secondaryTextTitle">Humidity</h1>
@@ -182,11 +188,6 @@ function App() {
       </section>
     </menu>
 
-    <nav>
-      <div className="toolBar">
-        <button onClick={menuSwitch.toggleState}><MenuIcon /></button>
-      </div>
-    </nav>
   </>
 }
 
