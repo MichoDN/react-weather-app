@@ -20,7 +20,7 @@ npm ci
 ```
 
 ### Run project
-Open the console in the project route and run "npm run preview", in the console will appear the route and port where you can visualize the project hosted in your localhost.
+Open the console in the project route and run "npm run preview", in the console will appear the route and port where you can visualize the project in your localhost.
 
 ## Built with:
 - HTML
